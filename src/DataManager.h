@@ -73,15 +73,28 @@ public:
 
 
 private:
+    /**
+     * @brief HTTP client for fetching champion data
+     */
     mutable httplib::Client client;
+    /**
+     * champion.json
+     */
     nlohmann::json championData;
+    /**
+     * Specific champion data for each champion
+     */
     mutable std::map<std::string, nlohmann::json> specificChampionData;  // Now mutable
     std::vector<std::string> championNames;
     std::map<std::string, std::string> championNameToIdMap;
 
     void ProcessChampionData();
 
+    /**
+     * @brief HTTP client for fetching item data
+     */
     mutable httplib::Client itemClient;
+
     mutable nlohmann::json itemData;
     mutable std::map<std::string, nlohmann::json> specificItemData;
     mutable std::vector<std::string> itemNames;

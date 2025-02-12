@@ -1,83 +1,107 @@
 #include "DataManager.h"
 #include <iostream>
 
-DataManager::DataManager() : client("ddragon.leagueoflegends.com"), itemClient("cdn.merakianalytics.com") {}
+DataManager::DataManager() 
+    : client("ddragon.leagueoflegends.com"), itemClient("cdn.merakianalytics.com") 
+{
+    // nothing
+}
 
-bool DataManager::FetchChampionData() {
-    auto res = client.Get("/cdn/14.14.1/data/en_US/champion.json");
-    if (res && res->status == 200) {
-        championData = nlohmann::json::parse(res->body);
+bool DataManager::FetchChampionData() 
+{
+    auto res = client.Get( "/cdn/14.14.1/data/en_US/champion.json" );
+    if ( res && res->status == 200 ) 
+    {
+        championData = nlohmann::json::parse( res->body );
         ProcessChampionData();
         return true;
     }
+
     std::cerr << "Failed to fetch champion data" << std::endl;
     return false;
 }
 
-bool DataManager::FetchSpecificChampionData(const std::string& championId) const {
-    if (specificChampionData.find(championId) != specificChampionData.end()) {
+/**
+ * ~/cdn/14.14.1/data/{regionId}/champion/{championId}.json 에서 특정 챔피언의 데이터를 가져오는 메서드.
+ */
+bool DataManager::FetchSpecificChampionData( const std::string& championId ) const 
+{
+    if ( specificChampionData.find( championId ) != specificChampionData.end() )
+    {
         return true;  // Data already fetched
     }
 
-    auto res = client.Get(("/cdn/14.14.1/data/en_US/champion/" + championId + ".json").c_str());
-    if (res && res->status == 200) {
-        specificChampionData[championId] = nlohmann::json::parse(res->body);
+    auto res = client.Get( ("/cdn/14.14.1/data/en_US/champion/" + championId + ".json").c_str() );
+    if ( res && res->status == 200 )
+    {
+        specificChampionData[championId] = nlohmann::json::parse( res->body );
         return true;
     }
+
     std::cerr << "Failed to fetch specific champion data for " << championId << std::endl;
     return false;
 }
 
 
-void DataManager::ProcessChampionData() {
+void DataManager::ProcessChampionData() 
+{
     championNames.clear();
     championNameToIdMap.clear();
-    for (auto& [key, value] : championData["data"].items()) {
+    for ( auto& [key, value] : championData["data"].items() )
+    {
         std::string name = value["name"];
-        championNames.push_back(name);
+        championNames.push_back( name );
         championNameToIdMap[name] = key;
     }
 }
 
-const std::vector<std::string>& DataManager::GetChampionNames() const {
+const std::vector<std::string>& DataManager::GetChampionNames() const 
+{
     return championNames;
 }
 
-std::string DataManager::GetChampionId(const std::string& championName) const {
-    auto it = championNameToIdMap.find(championName);
-    if (it != championNameToIdMap.end()) {
+std::string DataManager::GetChampionId( const std::string& championName ) const
+{
+    auto it = championNameToIdMap.find( championName );
+    if ( it != championNameToIdMap.end() ) 
+    {
         return it->second;
     }
+
     return championName; // Fallback to the name if ID is not found
 }
 
-std::string DataManager::GetChampionImageUrl(const std::string& championId) const {
+std::string DataManager::GetChampionImageUrl( const std::string& championId ) const 
+{
     return "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/" + championId + "_0.jpg";
 }
 
-std::string DataManager::GetChampionIconUrl(const std::string& championId) const {
+std::string DataManager::GetChampionIconUrl( const std::string& championId ) const 
+{
     return "http://ddragon.leagueoflegends.com/cdn/14.14.1/img/champion/" + championId + ".png";
 }
 
-nlohmann::json DataManager::GetChampionStats(const std::string& championName) const {
-    std::string championId = GetChampionId(championName);
-    FetchSpecificChampionData(championId);
-    return specificChampionData.at(championId)["data"][championId]["stats"];
+nlohmann::json DataManager::GetChampionStats( const std::string& championName ) const 
+{
+    std::string championId = GetChampionId( championName );
+    FetchSpecificChampionData( championId );
+    return specificChampionData.at( championId )["data"][championId]["stats"];
 }
 
-std::string DataManager::GetChampionTitle(const std::string& championName) const {
-    std::string championId = GetChampionId(championName);
+std::string DataManager::GetChampionTitle( const std::string& championName ) const 
+{
+    std::string championId = GetChampionId( championName );
     return championData["data"][championId]["title"];
 }
 
-std::string DataManager::GetChampionLore(const std::string& championName) const {
-    std::string championId = GetChampionId(championName);
-    FetchSpecificChampionData(championId);
+std::string DataManager::GetChampionLore( const std::string& championName ) const {
+    std::string championId = GetChampionId( championName);
+    FetchSpecificChampionData( championId );
     return specificChampionData.at(championId)["data"][championId]["lore"];
 }
 
-std::vector<std::string> DataManager::GetChampionTags(const std::string& championName) const {
-    std::string championId = GetChampionId(championName);
+std::vector<std::string> DataManager::GetChampionTags( const std::string& championName ) const {
+    std::string championId = GetChampionId( championName );
     return championData["data"][championId]["tags"].get<std::vector<std::string>>();
 }
 
