@@ -136,6 +136,12 @@ bool GUIManager::Initialize( int width, int height, const char* title )
     // backgroundTexture = LoadTexture(".\\assets\\image.png");
     backgroundTexture = this->LoadTexture( ".\\data\\image.png" );
 
+    if ( !dataManager.FetchLanguageData())
+    {
+        std::cerr << "Failed to fetch language data" << std::endl;
+        return false;
+    }
+
     if ( !dataManager.FetchChampionData() )
     {
         std::cerr << "Failed to fetch champion data" << std::endl;

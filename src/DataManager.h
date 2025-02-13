@@ -11,6 +11,7 @@ class DataManager {
 public:
     DataManager();
     // Champion window related functions
+    bool FetchLanguageData();
     bool FetchChampionData();
     bool FetchSpecificChampionData(const std::string& championId) const;  // Now const
     const std::vector<std::string>& GetChampionNames() const;
@@ -77,6 +78,8 @@ private:
      * @brief HTTP client for fetching champion data
      */
     mutable httplib::Client client;
+
+    std::string defaultLanguage;
     /**
      * champion.json
      */
