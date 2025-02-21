@@ -7,6 +7,20 @@
     },
     "configurePresets": [
         {
+            "name": "Visual-Studio-2022-make",
+            "displayName": "Visual Studio 2022 64-bit Make",
+            "description": "Configure for building with Visual Studio 64-bit using cl.exe",
+            "generator": "Visual Studio 17 2022",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
+                "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${sourceDir}/binary/debug",
+                "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
+            }
+        },
+        {
             "name": "msys2-mingw64-debug-make",
             "displayName": "MSYS2 MinGW 64-bit Debug Make",
             "description": "Configure for building with MSYS2 MinGW 64-bit using Make in Debug mode",

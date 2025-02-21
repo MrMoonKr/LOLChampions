@@ -1,6 +1,7 @@
 cmake_minimum_required( VERSION 3.23 )
 
-set( VCPKG_TARGET_TRIPLET "x64-mingw-dynamic" CACHE STRING "" )
+#set( VCPKG_TARGET_TRIPLET "x64-mingw-dynamic" CACHE STRING "" )
+set( VCPKG_TARGET_TRIPLET "x64-windows" CACHE STRING "" )
 set( CMAKE_TOOLCHAIN_FILE "C:/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "" )
 
 project( LOLChampions 
@@ -38,5 +39,12 @@ target_link_libraries( LOLChampions
     PRIVATE imgui::imgui
 )
 
-file( COPY ./data DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
+# file( COPY ./data DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
 
+# data 폴더를 실행 폴더(Debug, Release)로 복사
+add_custom_command(
+    TARGET LOLChampions POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/data $<TARGET_FILE_DIR:LOLChampions>/data
+    COMMENT "Copying data folder to build output directory"
+)
