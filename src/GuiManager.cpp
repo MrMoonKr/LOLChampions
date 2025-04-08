@@ -105,7 +105,7 @@ bool GUIManager::Initialize( int width, int height, const char* title )
     glfwSetWindowSizeCallback( window, WindowResizeCallback );
 
     float xScale = 1.0f, yScale = 1.0f;
-    // glfwGetWindowContentScale(window, &xScale, &yScale);
+    glfwGetWindowContentScale( window, &xScale, &yScale );
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();

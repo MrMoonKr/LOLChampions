@@ -15,9 +15,7 @@
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "cl.exe",
                 "CMAKE_CXX_COMPILER": "cl.exe",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
-                "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${sourceDir}/binary/debug",
-                "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
             }
         },
         {
